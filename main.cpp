@@ -1,90 +1,35 @@
-//
-//  main.cpp
-//  sample48
-//
-//  Created by Mudit Golchha on 13/10/22.
-//
-
-
-#include<iostream>
+#include <iostream>
 using namespace std;
-struct node
+
+class counter
 {
-    int data;
-    node *link;
+private:
+    unsigned int count;
+public:
+    counter() : count(0)
+    { }
+    counter(int c) : count(c)
+    { }
+    void get_detail()
+    {
+        cout<<"output :"<<count<<endl;
+    }
+    counter operator ++ ()
+    {
+        ++count;
+        return counter(count);
+    }
 };
-node *first=NULL;
-void insertnode(int datain)
-    {
-        node *ppre=new node;
-        ppre->data=datain;
-        ppre->link=first;
-        first=ppre;
-        cout<<"Insert Success!\n";
-    }
-void display()
-{
-        node *temp=first;
-        while(temp!=NULL)
-        {
-            cout<<"data:"<<temp->data<<" ";
-            temp=temp->link;
-        }
-        cout<<"\n";
-}
-void swap()
-{
-     node *ploc=first;
-    node *p=ploc->link;
-    while(p!=NULL)
-    {
-        int flag;
-        flag=ploc->data;
-        ploc->data=p->data;
-        p->data=flag;
-        cout<<ploc->data<<" "<<p->data<<" ";
-        ploc=p->link;
-        if(ploc!=NULL)
-        p=ploc->link;
-    
-    }
-        if(p==NULL)
-        {
-            cout<<ploc->data<<endl;
-        }
-}
+
 int main()
 {
-    node *ppre=new node;
-    //node *ploc=new node;
-    //node *p=new node;
-    int datain,choice;
-    do{
-    cout<<"ENter choice:\n";
-    cout<<"1.Insert\n2.display\n3.swap\n";
-    cin>>choice;
-    switch(choice){
-        
-    case 1:
-    {
-        cout<<"ENter data:\n";
-        cin>>datain;
-        insertnode(datain);
-        break;
-    }
-    case 2:
-        {
-            display();
-            break;
-        }
-    case 3:
-    {
-        swap();
-        break;
-    }
-    default:
-    return 0;
-}
-}while(choice!=4);
+    counter c1,c2;
+    cout<<c1.get_detail()<<endl;
+    cout<<c2.get_detail()<<endl;
+    
+    ++c1;
+    c2= ++c1;
+    cout<<c1.get_detail()<<endl;
+    cout<<c2.get_detail()<<endl;
     return 0;
 }
