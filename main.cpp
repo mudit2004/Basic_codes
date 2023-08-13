@@ -1,323 +1,160 @@
 //
 //  main.cpp
-//  suma48
+//  xxxx
 //
-//  Created by Mudit Golchha on 16/11/22.
+//  Created by Mudit Golchha on 10/10/22.
 //
 
-#include<iostream>
+//
+//  xxxxx.cpp
+//
+//
+//  Created by Mudit Golchha on 10/10/22.
+//
 
+#include <iostream>
 using namespace std;
-struct node
-{
+
+struct node{
     int data;
-    node *left,*right;
-    
+    node *link;
 };
-node* insert(node *root,node *temp)
+class Q
 {
-    if(root==NULL)
-        return temp;
-    else if(temp->data<root->data)
-        root->left=insert(root->left,temp);
-    else if(temp->data>=root->data)
-        root->right=insert(root->right,temp);
-    return root;
-    
-}
-node* find_largest(node *root)
-{
-    if(root->right==NULL)
-        return root;
-    else
-        return find_largest(root->right);
-    
-}
-node* find_smallest(node *root)
-{
-    if(root->left==NULL)
-        
-        return root;
-    
-    else
-        
-        return find_smallest(root->left);
-    
-    
-}
-node* del(node *root,int key)
-
-{
-
-if(root==NULL)
-
-return NULL;
-
-else if(root->data<key)
-
-root->right=del(root->right,key);
-
-else if(root->data>key)
-
-root->left=del(root->left,key);
-
-else
-
-{
-    
-    if(root->right==NULL)
-        
+public:
+    node *front;
+    node *rear;
+    node *qlink = new node();
+    int count;
+    void create()
     {
-        
-        node *temp=root->left;
-        
-        delete root;
-        
-        return temp;
-        
+        qlink = new node();
+        count = 0;
+        qlink->front = NULL;
+        qlink->rear = NULL;
     }
-    
-    else if(root->left==NULL)
-        
-    {
-        
-        node *temp=root->right;
-        
-        delete root;
-        
-        return temp;
-        
-    }
-    else
-
-    {
-        
-        node *largest=find_largest(root->left);
-        
-        cout<<"Largest: "<<largest->data<<endl;
-        
-        node *delnode=root;
-        
-        cout<<largest->data<<" moved to "<<root->data<<endl;
-        
-        root->data=largest->data;
-        
-        root->left=del(root->left,largest->data);
-        
-        
+    bool isEmpty(){
+        if(qlink->count == 0)
+            return true;
+        else
+            return false;
     }
 
+    void display(){
+        node *temp = qlink->front;
+        while(temp!= NULL){
+            cout<<temp->data<<" -> ";
+            temp = temp->link;
+        }
+        cout<<"Null"<<endl;
     }
 
-    return root;
-
-}
-void preorder(node *root)
-
-{
-    
-    if(root!=NULL)
-        
-    {
-        
-        cout<<root->data<<" ";
-        
-        preorder(root->left);
-        
-        preorder(root->right);
-        
+    bool queueFront(int &dataout){
+        bool s;
+        if(isEmpty())
+            s = false;
+        else{
+            dataout  = qlink->front->data;
+            s = true;
+        }
+        return s;
     }
-    
-    
-}
 
-void inorder(node *root)
-
-{
-    
-    if(root!=NULL)
-        
-    {
-        inorder(root->left);
-        
-        cout<<root->data<<" ";
-        
-        inorder(root->right);
-        
+    void destroy(){
+        node *temp1 = qlink->front;
+        while(temp1 != NULL){
+        node *del = temp1;
+        temp1 = temp1->link;
+        qlink->front = temp1;
+        --(qlink->count);
+        delete del;
+        }
+        display();
+        delete qlink;
     }
-    
-    
-}
-void postorder(node *root)
 
-{
-    
-    if(root!=NULL)
-        
-    {
-        
-        postorder(root->left);
-        
-        postorder(root->right);
-        
-        cout<<root->data<<" ";
-        
+    void enqueue(int datain){
+        node *newnode = new node();
+        if(newnode == NULL)
+            cout<<"Oveflow !!";
+        else{
+            newnode->link = NULL;
+            newnode->data = datain;
+            if(isEmpty()){
+                qlink->front = newnode;
+                qlink->rear = newnode;
+            }
+            else{
+                qlink->rear->link = newnode;
+                qlink->rear = newnode;
+            }
+            ++(qlink->count);
+            cout<<"Count : "<<qlink->count;
+        }
     }
-    
-    
-}
-bool search(node *root,int key)
 
-{
-    
-    if(root==NULL)
-        
-        return false;
-    
-    else if(root->data<key)
-        
-        return search(root->left,key);
-    
-    else if(root->data>key)
-        
-        return search(root->right,key);
-    
-    else
-        
-        return true;
-    
-    
-}
-int main()
+    int dequeue(){
+        if(isEmpty())
+            cout<<" Queue is empty ";
+        else{
+            int tempdata = qlink->front->data;
+            node *temp = qlink->front;
+            if(qlink->front == qlink->rear)
+                qlink->front = qlink->rear = NULL;
+            else
+                qlink->front = qlink->front->link;
+            delete temp;
+            --(qlink->count);
+            cout<<"Count : "<<qlink->count<<endl;
+            return tempdata;
+        }
+        return -1;
+    }
+};
 
-{
-    
-    node *root=NULL,*l=NULL,*s=NULL,*temp=NULL;
-    
-    int x,ch;
-    
-    do
-        
-    {
-        
-        cout<<"1-Insert, 2-Delete,3-Search,4-Find largest value,5-Find Smallest value,6-Preorder Traversal,7-Inorder traversal,8-Postorder Traversal,0-Exit:-\n";
-        
-        cout<<"Enter choice: ";
-        
+
+int main(){
+    Q obj;
+    int ch,data,dataout;
+    char chr;bool s;
+    create();
+    int des = 0;
+    do{
+        cout<<"\nEnter the choice : ";
         cin>>ch;
-        
-        switch(ch)
-            
-        {
-                
+        switch(ch){
             case 1:
-                
-                cout<<"Enter value to insert: ";
-                
-                cin>>x;
-                
-                temp=new node;
-                
-                temp->data=x;
-                
-                temp->left=temp->right=NULL;
-                
-                cout<<"Node created successfully."<<endl;
-                
-                root=insert(root,temp);
-                
-                cout<<"Element "<<x<<" inserted sucessfully!\n";
-                
+                cout<<"Enter data to insert: ";
+                cin>>data;
+                obj.enqueue(data);
                 break;
-                
             case 2:
-                
-                cout<<"Enter value to delete: ";
-                
-                int x;
-                
-                cin>>x;
-                
-                if(!search(root,x))
-                    
-                    cout<<"Element does not exist."<<endl;
-                
-                else
-                    
-                {
-                    
-                    root=del(root,x);
-                    
-                    cout<<"Element successfully deleted!!"<<endl;
-                    
-                }
-                
+                dataout = obj.dequeue();
+                if(dataout != -1)
+                    cout<<"Removed element    : "<<dataout<<endl;
                 break;
-                
             case 3:
-                
-                cout<<"Enter value to insert: ";
-                
-                cin>>x;
-                
-                if(search(root,x))
-                    
-                    cout<<"Element present in tree."<<endl;
-                
+                s = obj.queueFront(data);
+                if(s ==false)
+                    cout<<"Queue Empty\n";
                 else
-                    
-                    cout<<"Element not present in tree!"<<endl;
-                
+                    cout<<"Queue Front : "<<data;
                 break;
-                
             case 4:
-                
-                l=find_largest(root);
-                
-                cout<<"Largest value: "<<l->data<<endl;
-                
+                obj.destroy();
+                des =1;
                 break;
             case 5:
-                
-                s=find_smallest(root);
-                
-                cout<<"Smallest value: "<<s->data<<endl;
-                
+                obj.display();
                 break;
-                
-            case 6:
-                
-                preorder(root);
-                
-                cout<<endl;
-                
-                break;
-                
-            case 7:
-                
-                inorder(root);
-                
-                cout<<endl;
-                
-                break;
-                
-            case 8:
-                
-                postorder(root);
-                
-                cout<<endl;
-                
-                break;
-                
-            case 0: break;
-                
             default:
-                
-                cout<<"Incorrect choice."<<endl;
-                
+                cout<<"Enter the choice !!!!";
         }
-        
-        
-    }while(ch);
+    if(des != 0)
+        cout<<" Queue destroyed ";
+    }while(des == 0);
 }
+    
+                    
+                        
 
